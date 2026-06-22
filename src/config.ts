@@ -180,11 +180,28 @@ function colorDeclarations(color: ColorStyle): string {
   return ""; // inherit: touch nothing
 }
 
+/**
+ * The font-family value to actually apply for a target. If an explicit family
+ * stack is set it wins; otherwise, if a Google Font name is given, build a
+ * family stack from it (quoted + a sensible generic fallback). Empty when
+ * neither is set, so the host default is left untouched.
+ */
+export function effectiveFontFamily(style: TargetStyle): string {
+  if (style.fontFamily.trim()) return cssToken(style.fontFamily);
+  const gf = style.googleFont.trim();
+  if (gf) {
+    const name = gf.replace(/["';{}<>]/g, "").trim();
+    if (name) return `"${name}", sans-serif`;
+  }
+  return "";
+}
+
 function targetCss(style: TargetStyle): string {
   if (!style.enabled || !style.selector.trim()) return "";
   const decls: string[] = [];
 
-  if (style.fontFamily.trim()) decls.push(`font-family: ${cssToken(style.fontFamily)} !important;`);
+  const family = effectiveFontFamily(style);
+  if (family) decls.push(`font-family: ${family} !important;`);
   if (style.fontSize.trim()) decls.push(`font-size: ${cssToken(style.fontSize)} !important;`);
   if (style.fontWeight.trim()) decls.push(`font-weight: ${cssToken(style.fontWeight)} !important;`);
   if (style.letterSpacing.trim())

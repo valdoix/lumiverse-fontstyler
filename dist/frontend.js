@@ -106,12 +106,24 @@ function colorDeclarations(color) {
   }
   return "";
 }
+function effectiveFontFamily(style) {
+  if (style.fontFamily.trim())
+    return cssToken(style.fontFamily);
+  const gf = style.googleFont.trim();
+  if (gf) {
+    const name = gf.replace(/["';{}<>]/g, "").trim();
+    if (name)
+      return `"${name}", sans-serif`;
+  }
+  return "";
+}
 function targetCss(style) {
   if (!style.enabled || !style.selector.trim())
     return "";
   const decls = [];
-  if (style.fontFamily.trim())
-    decls.push(`font-family: ${cssToken(style.fontFamily)} !important;`);
+  const family = effectiveFontFamily(style);
+  if (family)
+    decls.push(`font-family: ${family} !important;`);
   if (style.fontSize.trim())
     decls.push(`font-size: ${cssToken(style.fontSize)} !important;`);
   if (style.fontWeight.trim())
@@ -342,8 +354,9 @@ function setup(ctx) {
       el.style.cssText = "";
       if (!config.enabled || !t.enabled)
         continue;
-      if (t.fontFamily)
-        el.style.fontFamily = t.fontFamily;
+      const family = effectiveFontFamily(t);
+      if (family)
+        el.style.fontFamily = family;
       if (t.fontSize)
         el.style.fontSize = t.fontSize;
       if (t.fontWeight)

@@ -6,6 +6,7 @@
 
 import {
   buildCss,
+  effectiveFontFamily,
   googleFontHrefs,
   mergeConfig,
   type ColorMode,
@@ -117,7 +118,8 @@ export function setup(ctx: SpindleFrontendContext): () => void {
       const t = config.targets[key];
       el.style.cssText = "";
       if (!config.enabled || !t.enabled) continue;
-      if (t.fontFamily) el.style.fontFamily = t.fontFamily;
+      const family = effectiveFontFamily(t);
+      if (family) el.style.fontFamily = family;
       if (t.fontSize) el.style.fontSize = t.fontSize;
       if (t.fontWeight) el.style.fontWeight = t.fontWeight;
       if (t.letterSpacing) el.style.letterSpacing = t.letterSpacing;
