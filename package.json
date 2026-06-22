@@ -1,0 +1,16 @@
+{
+  "name": "lumiverse-fontstyler",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lumiverse Spindle extension to customize message and name-header fonts and colors (solid/gradient).",
+  "type": "module",
+  "scripts": {
+    "build:backend": "bun build ./src/backend.ts --target=bun --outfile=./dist/backend.js",
+    "build:frontend": "bun build ./src/frontend.ts --target=browser --outfile=./dist/frontend.js",
+    "build": "bun run build:backend && bun run build:frontend",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}
